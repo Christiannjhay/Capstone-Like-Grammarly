@@ -89,13 +89,15 @@ function captureAndStoreInput() {
   }
 }
 
+
+
 // Function to add an underline to the user input after a delay
 let typingTimer;
 let editing = false;
 let popup;
 
-// Function to show the popup
-function showPopup() {
+// Function to show the popup with a specific message
+function showPopup(message) {
   // Create the popup element if it doesn't exist
   if (!popup) {
     popup = document.createElement("div");
@@ -112,7 +114,7 @@ function showPopup() {
   }
 
   // Set the popup message
-  popup.innerText = "Your text contains profanity";
+  popup.innerText = message;
 
   // Center the popup on the page
   popup.style.left = "40%";
@@ -135,28 +137,62 @@ function hidePopup() {
   }
 }
 
+// Function to update the popup message based on the toxicity score
+function updatePopupMessage(highestCategory) {
+  let message = "Your text contains " + highestCategory;
+  showPopup(message);
+}
+
+// Function to send text to your Python API
+function sendToPythonAPI(text) {
+  // Replace with the URL of your Python API endpoint
+  const apiUrl = 'https://capstone-api-wzcr.onrender.com/analyze';
+
+  // Create a request to your Python API
+  const request = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text: text })
+  };
+
+  // Send the request to your Python API
+  fetch(apiUrl, request)
+    .then(response => response.json())
+    .then(data => {
+      
+      const highestCategory = data.highest_category; // Extract the highest category from the response
+      
+      if (highestCategory !== undefined) {
+        updatePopupMessage(highestCategory);
+      } else {
+        console.error('Error: Toxicity score not found in API response');
+      }
+
+    })
+    .catch(error => {
+      console.error('Error sending data to your Python API:', error);
+    });
+}
+
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
-  // Get the tweet input element
   const tweetInput = document.querySelector('[aria-label="Post text"]');
 
-  // If the user starts editing, clear the timer and remove the underline
   if (editing) {
     clearTimeout(typingTimer);
     removeRedUnderline(tweetInput);
   }
 
-  // Start a new timer to add an underline after a 3-second delay
   typingTimer = setTimeout(function() {
     captureInput(tweetInput.innerText);
     styleUserInput(tweetInput);
     editing = false;
 
-    // Check if the user has paused typing for 3 seconds
     if (editing === false) {
-      // Show the popup only when the user hovers over the underlined text
-      tweetInput.addEventListener("mouseover", showPopup);
-      tweetInput.addEventListener("mouseout", hidePopup);
+      // Send the text to your Python API
+      sendToPythonAPI(tweetInput.innerText);
     }
   }, 3000);
 }
