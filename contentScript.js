@@ -92,7 +92,50 @@ function captureAndStoreInput() {
 // Function to add an underline to the user input after a delay
 let typingTimer;
 let editing = false;
+let popup;
 
+// Function to show the popup
+function showPopup() {
+  // Create the popup element if it doesn't exist
+  if (!popup) {
+    popup = document.createElement("div");
+    popup.className = "popup";
+    popup.style.position = "fixed"; // Fixed position for viewport-centered popup
+    popup.style.display = "none";
+    document.body.appendChild(popup);
+
+    // Add an "X" button to close the popup
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "X";
+    closeButton.addEventListener("click", hidePopup);
+    popup.appendChild(closeButton);
+  }
+
+  // Set the popup message
+  popup.innerText = "Your text contains profanity";
+
+  // Center the popup on the page
+  popup.style.left = "40%";
+  popup.style.top = "22%";
+  popup.style.transform = "translate(-50%, -50%)";
+
+  // Display the popup element
+  popup.style.display = "block";
+
+  // Style the popup element as an inline card
+  popup.style.border = "1px solid black";
+  popup.style.backgroundColor = "white";
+  popup.style.padding = "10px";
+}
+
+// Function to hide the popup
+function hidePopup() {
+  if (popup) {
+    popup.style.display = "none";
+  }
+}
+
+// Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
   // Get the tweet input element
   const tweetInput = document.querySelector('[aria-label="Post text"]');
@@ -108,38 +151,14 @@ function addUnderlineToUserInput() {
     captureInput(tweetInput.innerText);
     styleUserInput(tweetInput);
     editing = false;
+
+    // Check if the user has paused typing for 3 seconds
+    if (editing === false) {
+      // Show the popup only when the user hovers over the underlined text
+      tweetInput.addEventListener("mouseover", showPopup);
+      tweetInput.addEventListener("mouseout", hidePopup);
+    }
   }, 3000);
-}
-
-// Function to show the popup
-function showPopup(element, message) {
-  // Create the popup element
-  const popup = document.querySelector(".underline-popup");
-  if (!popup) {
-    // If the popup element does not exist, create it
-    popup = document.createElement("div");
-    popup.className = "underline-popup";
-    document.body.appendChild(popup);
-  }
-
-  // Set the popup message
-  popup.innerText = message;
-
-  // Position the popup element below the element that triggered it
-  const rect = element.getBoundingClientRect();
-  popup.style.top = rect.bottom + "px";
-  popup.style.left = rect.left + "px";
-
-  // Display the popup element
-  popup.style.display = "block";
-}
-
-// Function to hide the popup
-function hidePopup() {
-  const popup = document.querySelector(".underline-popup");
-  if (popup) {
-    popup.style.display = "none";
-  }
 }
 
 // Add an event listener to the tweet input element to listen for keyup events
@@ -156,20 +175,6 @@ document.body.addEventListener('input', function(event) {
     removeRedUnderline(event.target);
     editing = false;
   }
-});
-
-// Add an event listener to the tweet input element to listen for mouseover events
-document.body.addEventListener("mouseover", function(event) {
-  // If the user is hovering over underlined text, show the popup
-  if (event.target.style.textDecoration === "underline") {
-    showPopup(event.target, "the text contains Profanity"); // Customize the message here
-  }
-});
-
-// Add an event listener to the document body to listen for mouseout events
-document.body.addEventListener("mouseout", function() {
-  // Hide the popup when the user moves the mouse out of the popup element
-  hidePopup();
 });
 
 // Add an underline to the user input after 3 seconds
