@@ -20,7 +20,7 @@ function captureInput(inputValue) {
 
 // Function to send input to Python for sentiment analysis
 function sendInputToPython(inputValue) {
-  const url = 'http://127.0.0.1:5000/analyze';
+  const url = 'https://capstone-api-wzcr.onrender.com/analyze';
   const options = {
     method: 'POST',
     mode: 'cors',  // Add this line to enable CORS
