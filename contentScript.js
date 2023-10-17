@@ -185,31 +185,45 @@ function addUnderlineToUserInput() {
     removeRedUnderline(tweetInput);
   }
 
-  typingTimer = setTimeout(function() {
+  typingTimer = setTimeout(function () {
     captureInput(tweetInput.innerText);
     styleUserInput(tweetInput);
     editing = false;
 
     if (editing === false) {
-      // Send the text to your Python API
-      sendToPythonAPI(tweetInput.innerText);
+      if (tweetInput.innerText.trim() === "") {
+        clearPopup(); // Hide the popup when the textfield is empty
+      } else {
+        // Send the text to your Python API
+        sendToPythonAPI(tweetInput.innerText);
+      }
     }
   }, 3000);
 }
 
 // Add an event listener to the tweet input element to listen for keyup events
-document.body.addEventListener('keyup', function() {
+// document.body.addEventListener('keyup', function() {
+//   editing = true;
+//   addUnderlineToUserInput();
+// });
+
+// Function to clear the popup
+function clearPopup() {
+  if (popup) {
+    hidePopup();
+  }
+}
+// Add an event listener to the tweet input element to listen for input events
+document.body.addEventListener('input', function (event) {
   editing = true;
   addUnderlineToUserInput();
 });
 
-// Add an event listener to the tweet input element to listen for input events
-document.body.addEventListener('input', function(event) {
-  // If the user is editing, clear the timer and remove the underline
-  if (editing) {
-    clearTimeout(typingTimer);
-    removeRedUnderline(event.target);
-    editing = false;
+// Add an event listener to the tweet input element to listen for keydown events
+document.body.addEventListener('keydown', function (event) {
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+  if (event.key === "Backspace" && tweetInput && tweetInput.innerText.trim() === "") {
+    clearPopup(); // Hide the popup when the textfield is empty
   }
 });
 
