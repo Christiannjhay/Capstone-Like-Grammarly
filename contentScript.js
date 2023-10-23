@@ -176,7 +176,6 @@ function sendToPythonAPI(text) {
     });
 }
 
-
 // ... (your existing code)
 
 // Function to add an underline to the user input after a delay
@@ -217,7 +216,18 @@ function positionPopup() {
   if (popup && tweetInput) {
     const inputRect = tweetInput.getBoundingClientRect();
     popup.style.top = inputRect.bottom + 'px';
-    popup.style.left = inputRect.left + 'px';
+
+    // Check if the text field is in the viewport
+    const inputIsInViewport = inputRect.top >= 0 && inputRect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+
+    if (inputIsInViewport) {
+      // If the text field is in the viewport, set popup position to fixed
+      popup.style.position = 'fixed';
+    } else {
+      // If the text field is out of the viewport, set popup position to absolute
+      popup.style.position = 'absolute';
+      popup.style.left = inputRect.left + 'px'; // This line is executed only when the text field is out of the viewport
+    }
   }
 }
 
@@ -225,6 +235,7 @@ function positionPopup() {
 document.body.addEventListener('input', function (event) {
   editing = true;
   addUnderlineToUserInput();
+  positionPopup();
 });
 
 // Add an event listener to the tweet input element to listen for keydown events
@@ -248,11 +259,6 @@ document.body.addEventListener('keydown', function (event) {
 window.addEventListener('scroll', function () {
   positionPopup();
 });
-
-
-
-
-
 
 
 
