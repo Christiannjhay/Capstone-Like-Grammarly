@@ -176,6 +176,59 @@ function sendToPythonAPI(text) {
     });
 }
 
+// // Function to add an underline to the user input after a delay
+// function addUnderlineToUserInput() {
+//   const tweetInput = document.querySelector('[aria-label="Post text"]');
+
+//   if (editing) {
+//     clearTimeout(typingTimer);
+//     removeRedUnderline(tweetInput);
+//   }
+
+//   typingTimer = setTimeout(function () {
+//     captureInput(tweetInput.innerText);
+//     styleUserInput(tweetInput);
+//     editing = false;
+
+//     if (editing === false) {
+//       if (tweetInput.innerText.trim() === "") {
+//         clearPopup(); // Hide the popup when the textfield is empty
+//       } else {
+//         // Send the text to your Python API
+//         sendToPythonAPI(tweetInput.innerText);
+//       }
+//     }
+//   }, 3000);
+// }
+
+// // Add an event listener to the tweet input element to listen for keyup events
+// // document.body.addEventListener('keyup', function() {
+// //   editing = true;
+// //   addUnderlineToUserInput();
+// // });
+
+// // Function to clear the popup
+// function clearPopup() {
+//   if (popup) {
+//     hidePopup();
+//   }
+// }
+// // Add an event listener to the tweet input element to listen for input events
+// document.body.addEventListener('input', function (event) {
+//   editing = true;
+//   addUnderlineToUserInput();
+// });
+
+// // Add an event listener to the tweet input element to listen for keydown events
+// document.body.addEventListener('keydown', function (event) {
+//   const tweetInput = document.querySelector('[aria-label="Post text"]');
+//   if (event.key === "Backspace" && tweetInput && tweetInput.innerText.trim() === "") {
+//     clearPopup(); // Hide the popup when the textfield is empty
+//   }
+// });
+
+// ... (your existing code)
+
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
   const tweetInput = document.querySelector('[aria-label="Post text"]');
@@ -201,18 +254,23 @@ function addUnderlineToUserInput() {
   }, 3000);
 }
 
-// Add an event listener to the tweet input element to listen for keyup events
-// document.body.addEventListener('keyup', function() {
-//   editing = true;
-//   addUnderlineToUserInput();
-// });
-
 // Function to clear the popup
 function clearPopup() {
   if (popup) {
     hidePopup();
   }
 }
+
+// Function to move the popup message to the tweetInput position
+function positionPopup() {
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+  if (popup && tweetInput) {
+    const inputRect = tweetInput.getBoundingClientRect();
+    popup.style.top = inputRect.bottom + 'px';
+    popup.style.left = inputRect.left + 'px';
+  }
+}
+
 // Add an event listener to the tweet input element to listen for input events
 document.body.addEventListener('input', function (event) {
   editing = true;
@@ -221,11 +279,32 @@ document.body.addEventListener('input', function (event) {
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
-  const tweetInput = document.querySelector('[aria-label="Post text"]');
-  if (event.key === "Backspace" && tweetInput && tweetInput.innerText.trim() === "") {
-    clearPopup(); // Hide the popup when the textfield is empty
+  if (event.key === "Backspace") {
+    const tweetInput = document.querySelector('[aria-label="Post text"]');
+    if (tweetInput && tweetInput.innerText.trim() === "") {
+      clearPopup(); // Hide the popup when the textfield is empty and Backspace is pressed
+    } else {
+      positionPopup(); // Move the popup when the textfield is cleared
+    }
+  }
+  // Add other conditions or behavior based on key presses as needed.
+  // For example, you can hide the popup when the user presses Enter.
+  if (event.key === "Enter") {
+    clearPopup(); // Hide the popup when you press Enter (you may modify this behavior)
   }
 });
+
+// Add an event listener to the window to reposition the popup when scrolling
+window.addEventListener('scroll', function () {
+  positionPopup();
+});
+
+
+
+
+
+
+
 
 // Add an underline to the user input after 3 seconds
 addUnderlineToUserInput();
