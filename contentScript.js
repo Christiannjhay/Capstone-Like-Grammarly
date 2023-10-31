@@ -176,7 +176,6 @@ function sendToPythonAPI(text) {
     });
 }
 
-// ... (your existing code)
 
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
@@ -219,13 +218,20 @@ document.body.addEventListener('input', function (event) {
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
+
+
+ 
+
   clearPopup()
   if (event.key === "Backspace") {
     clearPopup()
     const tweetInput = document.querySelector('[aria-label="Post text"]');
+    removeRedUnderline(tweetInput);
     if (tweetInput && tweetInput.innerText.trim() === "") {
       clearPopup(); // Hide the popup when the textfield is empty and Backspace is pressed
+      removeRedUnderline(tweetInput);
     }
+
   }
   // Add other conditions or behavior based on key presses as needed.
   // For example, you can hide the popup when the user presses Enter.
