@@ -126,7 +126,7 @@ function showPopup(message) {
 
   // Style the popup element as an inline card
   popup.style.border = "1px solid black";
-  popup.style.backgroundColor = "white";
+  popup.style.backgroundColor = "gray";
   popup.style.padding = "10px";
 }
 
@@ -163,10 +163,7 @@ function sendToPythonAPI(text) {
     .then(data => {
       
       const highestCategory = data.highest_category; // Extract the highest category from the response
-      const sentiment_label = data.sentiment_label; // Extract the highest category from the response
-
-      globalThis.sentiment_label = sentiment_label
-      ;
+      
       if (highestCategory !== undefined) {
         updatePopupMessage(highestCategory);
       } else {
