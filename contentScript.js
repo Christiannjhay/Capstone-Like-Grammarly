@@ -210,42 +210,21 @@ function clearPopup() {
   }
 }
 
-// Function to move the popup message to the tweetInput position
-function positionPopup() {
-  const tweetInput = document.querySelector('[aria-label="Post text"]');
-  if (popup && tweetInput) {
-    const inputRect = tweetInput.getBoundingClientRect();
-    popup.style.top = inputRect.bottom + 'px';
-
-    // Check if the text field is in the viewport
-    const inputIsInViewport = inputRect.top >= 0 && inputRect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-
-    if (inputIsInViewport) {
-      // If the text field is in the viewport, set popup position to fixed
-      popup.style.position = 'fixed';
-    } else {
-      // If the text field is out of the viewport, set popup position to absolute
-      popup.style.position = 'absolute';
-      popup.style.left = inputRect.left + 'px'; // This line is executed only when the text field is out of the viewport
-    }
-  }
-}
-
 // Add an event listener to the tweet input element to listen for input events
 document.body.addEventListener('input', function (event) {
   editing = true;
   addUnderlineToUserInput();
-  positionPopup();
+ 
 });
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
+  clearPopup()
   if (event.key === "Backspace") {
+    clearPopup()
     const tweetInput = document.querySelector('[aria-label="Post text"]');
     if (tweetInput && tweetInput.innerText.trim() === "") {
       clearPopup(); // Hide the popup when the textfield is empty and Backspace is pressed
-    } else {
-      positionPopup(); // Move the popup when the textfield is cleared
     }
   }
   // Add other conditions or behavior based on key presses as needed.
@@ -254,13 +233,6 @@ document.body.addEventListener('keydown', function (event) {
     clearPopup(); // Hide the popup when you press Enter (you may modify this behavior)
   }
 });
-
-// Add an event listener to the window to reposition the popup when scrolling
-window.addEventListener('scroll', function () {
-  positionPopup();
-});
-
-
 
 // Add an underline to the user input after 3 seconds
 addUnderlineToUserInput();
