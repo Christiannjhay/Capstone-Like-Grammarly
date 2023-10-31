@@ -163,12 +163,15 @@ function sendToPythonAPI(text) {
     .then(data => {
       
       const highestCategory = data.highest_category; // Extract the highest category from the response
-      
-      if (highestCategory !== undefined) {
+      const sentiment = data.sentiment; // Extract the Sentiment
+
+      if (sentiment == 'negative') {
         updatePopupMessage(highestCategory);
-      } else {
-        console.error('Error: Toxicity score not found in API response');
       }
+      else if(sentiment == 'positive'){
+        console.log('no need to underline')
+      }
+      
 
     })
     .catch(error => {
