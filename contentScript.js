@@ -163,7 +163,10 @@ function sendToPythonAPI(text) {
     .then(data => {
       
       const highestCategory = data.highest_category; // Extract the highest category from the response
-      
+      const sentiment_label = data.sentiment_label; // Extract the highest category from the response
+
+      globalThis.sentiment_label = sentiment_label
+      ;
       if (highestCategory !== undefined) {
         updatePopupMessage(highestCategory);
       } else {
@@ -179,7 +182,7 @@ function sendToPythonAPI(text) {
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
   const tweetInput = document.querySelector('[aria-label="Post text"]');
-
+ 
   if (editing) {
     clearTimeout(typingTimer);
     removeRedUnderline(tweetInput);
