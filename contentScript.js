@@ -192,12 +192,8 @@ function addUnderlineToUserInput() {
 
   typingTimer = setTimeout(function () {
     captureInput(tweetInput.innerText);
-    if (senti == 'negative') {
-      styleUserInput(tweetInput);
+    styleUserInput(tweetInput);
       
-    } else {
-      console.log('no need to underline')
-    }
     editing = false;
 
     if (editing === false) {
