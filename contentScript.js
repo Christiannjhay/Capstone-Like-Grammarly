@@ -199,7 +199,7 @@ function addUnderlineToUserInput() {
         sendToPythonAPI(tweetInput.innerText);
       }
     }
-  }, 3000);
+  }, 6000);
 }
 
 // Function to clear the popup
@@ -219,8 +219,7 @@ document.body.addEventListener('input', function (event) {
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
 
-
- 
+addUnderlineToUserInput();
 
   clearPopup()
   if (event.key === "Backspace") {
@@ -240,8 +239,6 @@ document.body.addEventListener('keydown', function (event) {
   }
 });
 
-// Add an underline to the user input after 3 seconds
-addUnderlineToUserInput();
 
 // Call the Twitter Capture functions
 captureAndStoreInput();
