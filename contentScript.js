@@ -143,8 +143,6 @@ function updatePopupMessage(highestCategory) {
   showPopup(message);
 }
 
-globalThis.sentiment = null;
-
 // Function to send text to your Python API
 function sendToPythonAPI(text) {
   // Replace with the URL of your Python API endpoint
@@ -165,15 +163,12 @@ function sendToPythonAPI(text) {
     .then(data => {
       
       const highestCategory = data.highest_category; // Extract the highest category from the response
-      globalThis.sentiment = data.sentiment;
-
-      if (sentiment == 'negative') {
-        updatePopupMessage(highestCategory);
-      }
-      else if(sentiment == 'positive'){
-        console.log('no need to underline')
-      }
       
+      if (highestCategory !== undefined) {
+        updatePopupMessage(highestCategory);
+      } else {
+        console.error('Error: Toxicity score not found in API response');
+      }
 
     })
     .catch(error => {
@@ -181,10 +176,12 @@ function sendToPythonAPI(text) {
     });
 }
 
+// ... (your existing code)
+
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
   const tweetInput = document.querySelector('[aria-label="Post text"]');
-  const senti = sentiment;
+ 
   if (editing) {
     clearTimeout(typingTimer);
     removeRedUnderline(tweetInput);
@@ -193,7 +190,6 @@ function addUnderlineToUserInput() {
   typingTimer = setTimeout(function () {
     captureInput(tweetInput.innerText);
     styleUserInput(tweetInput);
-      
     editing = false;
 
     if (editing === false) {
@@ -271,4 +267,3 @@ addUnderlineToUserInput();
 
 // Call the Twitter Capture functions
 captureAndStoreInput();
-
