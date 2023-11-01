@@ -213,6 +213,7 @@ async function addUnderlineToUserInput() {
       } else {
         console.log('NOT TOXIC');
         console.log(decision);
+        hidePopup();
       }
       captureInput(tweetInput.innerText);
     } else {
