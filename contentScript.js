@@ -229,40 +229,54 @@ function clearPopup() {
   }
 }
 
+let typeTimer;
+const debounceDelay = 1000; // Adjust the delay as needed
+let debounceTimeout;
+
 // Add an event listener to the tweet input element to listen for input events
 document.body.addEventListener('input', function (event) {
-
   const tweetInput = document.querySelector('[aria-label="Post text"]');
-
   editing = true;
   removeRedUnderline(tweetInput);
-  addUnderlineToUserInput();
-  
+  clearTimeout(typeTimer);
+  clearTimeout(debounceTimeout);
+
+  debounceTimeout = setTimeout(function () {
+    addUnderlineToUserInput(tweetInput.innerText);
+  }, debounceDelay);
 });
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
 
+
+clearPopup();
+
 const tweetInput = document.querySelector('[aria-label="Post text"]');
 
 removeRedUnderline(tweetInput);
-addUnderlineToUserInput();
-
-  clearPopup()
   if (event.key === "Backspace") {
-    clearPopup()
-    
+    clearPopup();
+    clearTimeout(typingTimer);
+  
+    typingTimer = setTimeout(function() {
+      
+      addUnderlineToUserInput();
+      console.log("it is working");
+    }, 3000);
+  
     removeRedUnderline(tweetInput);
     if (tweetInput && tweetInput.innerText.trim() === "") {
       clearPopup(); // Hide the popup when the textfield is empty and Backspace is pressed
       removeRedUnderline(tweetInput);
     }
-
   }
-  // Add other conditions or behavior based on key presses as needed.
+
+  
+  
   // For example, you can hide the popup when the user presses Enter.
   if (event.key === "Enter") {
-    clearPopup(); // Hide the popup when you press Enter (you may modify this behavior)
+    clearPopup(); 
   }
 });
 
