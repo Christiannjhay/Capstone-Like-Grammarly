@@ -162,11 +162,13 @@ function sendToPythonAPI(text) {
   fetch(apiUrl, request)
     .then(response => response.json())
     .then(data => {
-      
+
+      globalThis.underlineDecision = data.underline_decision;
       const highestCategory = data.highest_category; // Extract the highest category from the response
-      
+
       if (highestCategory !== undefined) {
         updatePopupMessage(highestCategory);
+        console.log(underlineDecision);
       } else {
         console.error('Error: Toxicity score not found in API response');
       }
@@ -177,11 +179,9 @@ function sendToPythonAPI(text) {
     });
 }
 
-
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
-
-  
+  const underlineDecision = globalThis.underlineDecision;
   const tweetInput = document.querySelector('[aria-label="Post text"]');
  
   if (editing) {
@@ -209,8 +209,14 @@ function addUnderlineToUserInput() {
     
     function addUnderlineWithDelay(sent) {
       if (sent === true) {
+          if (underlineDecision > 0.5)  {
+            styleUserInput(tweetInput);
+            console.log('TOXIC')
+          } else {
+            console.log('NOT TOXIC');
+          }
+         
           captureInput(tweetInput.innerText);
-          styleUserInput(tweetInput);
           sent = false;
       } else {
         console.log('API NOT WORKING');
