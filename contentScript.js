@@ -95,6 +95,7 @@ function captureAndStoreInput() {
 let typingTimer;
 let editing = false;
 let popup;
+let sent = false;
 
 // Function to show the popup with a specific message
 function showPopup(message) {
@@ -179,6 +180,8 @@ function sendToPythonAPI(text) {
 
 // Function to add an underline to the user input after a delay
 function addUnderlineToUserInput() {
+
+  
   const tweetInput = document.querySelector('[aria-label="Post text"]');
  
   if (editing) {
@@ -187,8 +190,7 @@ function addUnderlineToUserInput() {
   }
 
   typingTimer = setTimeout(function () {
-    captureInput(tweetInput.innerText);
-    styleUserInput(tweetInput);
+    
     editing = false;
 
     if (editing === false) {
@@ -197,34 +199,59 @@ function addUnderlineToUserInput() {
       } else {
         // Send the text to your Python API
         sendToPythonAPI(tweetInput.innerText);
+        sent = true;
+        // Call the function with the delay.
+        addUnderlineWithDelay(sent);
       }
     }
-  }, 6000);
+  }, 5000);
+  
+    
+    function addUnderlineWithDelay(sent) {
+      if (sent === true) {
+          captureInput(tweetInput.innerText);
+          styleUserInput(tweetInput);
+          sent = false;
+      } else {
+        console.log('API NOT WORKING');
+      }
+    }
 }
 
 // Function to clear the popup
 function clearPopup() {
+
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+
   if (popup) {
     hidePopup();
+    removeRedUnderline(tweetInput);
   }
 }
 
 // Add an event listener to the tweet input element to listen for input events
 document.body.addEventListener('input', function (event) {
+
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+
   editing = true;
+  removeRedUnderline(tweetInput);
   addUnderlineToUserInput();
- 
+  
 });
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
 
+const tweetInput = document.querySelector('[aria-label="Post text"]');
+
+removeRedUnderline(tweetInput);
 addUnderlineToUserInput();
 
   clearPopup()
   if (event.key === "Backspace") {
     clearPopup()
-    const tweetInput = document.querySelector('[aria-label="Post text"]');
+    
     removeRedUnderline(tweetInput);
     if (tweetInput && tweetInput.innerText.trim() === "") {
       clearPopup(); // Hide the popup when the textfield is empty and Backspace is pressed
@@ -238,6 +265,7 @@ addUnderlineToUserInput();
     clearPopup(); // Hide the popup when you press Enter (you may modify this behavior)
   }
 });
+
 
 
 // Call the Twitter Capture functions
