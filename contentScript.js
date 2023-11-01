@@ -145,11 +145,11 @@ function updatePopupMessage(highestCategory) {
 }
 
 // Function to send text to your Python API
-function sendToPythonAPI(text) {
-  // Replace with the URL of your Python API endpoint
+async function sendToPythonAPI(text) {
+  // Replace with the URL of your Python API endpoint.
   const apiUrl = 'https://capstone-api-wzcr.onrender.com/analyze';
 
-  // Create a request to your Python API
+  // Create a request to your Python API.
   const request = {
     method: 'POST',
     headers: {
@@ -158,71 +158,69 @@ function sendToPythonAPI(text) {
     body: JSON.stringify({ text: text })
   };
 
-  // Send the request to your Python API
-  fetch(apiUrl, request)
-    .then(response => response.json())
-    .then(data => {
+  try {
+    const response = await fetch(apiUrl, request);
+    const data = await response.json();
+    
+    // Extract the highest category and underline decision from the response.
+    const highestCategory = data.highest_category;
+    const decision = data.underline_decision;
 
-      globalThis.underlineDecision = data.underline_decision;
-      const highestCategory = data.highest_category; // Extract the highest category from the response
-
-      if (highestCategory !== undefined) {
-        updatePopupMessage(highestCategory);
-        console.log(underlineDecision);
-      } else {
-        console.error('Error: Toxicity score not found in API response');
-      }
-
-    })
-    .catch(error => {
-      console.error('Error sending data to your Python API:', error);
-    });
+    if (highestCategory !== undefined) {
+      updatePopupMessage(highestCategory);
+      return decision; // Return the decision value
+    } else {
+      console.error('Error: Toxicity score not found in API response');
+      return undefined;
+    }
+  } catch (error) {
+    console.error('Error sending data to your Python API:', error);
+    return undefined;
+  }
 }
 
 // Function to add an underline to the user input after a delay
-function addUnderlineToUserInput() {
-  const underlineDecision = globalThis.underlineDecision;
+async function addUnderlineToUserInput() {
   const tweetInput = document.querySelector('[aria-label="Post text"]');
- 
+
   if (editing) {
     clearTimeout(typingTimer);
     removeRedUnderline(tweetInput);
   }
 
-  typingTimer = setTimeout(function () {
-    
+  typingTimer = setTimeout(async function () {
     editing = false;
 
     if (editing === false) {
       if (tweetInput.innerText.trim() === "") {
         clearPopup(); // Hide the popup when the textfield is empty
       } else {
-        // Send the text to your Python API
-        sendToPythonAPI(tweetInput.innerText);
+        // Send the text to your Python API and wait for the response
         sent = true;
+        const decision = await sendToPythonAPI(tweetInput.innerText);
         // Call the function with the delay.
-        addUnderlineWithDelay(sent);
+        addUnderlineWithDelay(sent, decision);
       }
     }
-  }, 5000);
-  
-    
-    function addUnderlineWithDelay(sent) {
-      if (sent === true) {
-          if (underlineDecision > 0.5)  {
-            styleUserInput(tweetInput);
-            console.log('TOXIC')
-          } else {
-            console.log('NOT TOXIC');
-          }
-         
-          captureInput(tweetInput.innerText);
-          sent = false;
+  }, 4000);
+
+  async function addUnderlineWithDelay(sent, decision) {
+    if (sent === true) {
+      if (decision >= 0.5) {
+        styleUserInput(tweetInput);
+        console.log('TOXIC');
+        console.log(decision);
       } else {
-        console.log('API NOT WORKING');
+        console.log('NOT TOXIC');
+        console.log(decision);
       }
+      captureInput(tweetInput.innerText);
+    } else {
+      console.log('API NOT WORKING');
     }
+  }
 }
+
 
 // Function to clear the popup
 function clearPopup() {
