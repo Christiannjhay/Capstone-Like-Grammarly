@@ -1,9 +1,11 @@
-// Function to capture and store an input
+
+
+
+// Function to capture and store an input / Skip empty inputs / Send captured input to the API
 function captureInput(inputValue) {
   if (!inputValue.trim()) {
-    return; // Skip empty inputs
-  }
-
+    return;
+}
   // Send the captured input to the Python server
   sendInputToPython(inputValue);
 
@@ -19,11 +21,11 @@ function captureInput(inputValue) {
 }
 
 // Function to send input to Python for sentiment analysis
-function sendInputToPython(inputValues) {
+function sendInputToPython(inputValue) {
   const url = 'https://capstone-api-wzcr.onrender.com/analyze';
   const options = {
     method: 'POST',
-    mode: 'cors',  // Add this line to enable CORS
+    mode: 'cors', 
     headers: {
       'Content-Type': 'application/json',
     },
@@ -45,10 +47,38 @@ function sendInputToPython(inputValues) {
     });
 }
 
-// Function to capture search input
-function captureSearchInput(inputValue) {
-  captureInput(inputValue);
+
+// Function to capture Twitter Whats Happening
+function captureWhatsHappening() {
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+  const tweetButton = event.target.closest('[data-testid="tweetButtonInline"]');
+
+  if (tweetButton) {
+    const inputValue = tweetInput.innerText;
+    captureInput(inputValue);
+    styleUserInput(tweetInput);
+  }
 }
+
+// Function to handle the tweet button click
+function onTweetButtonClick() {
+  const tweetInput = document.querySelector('[data-testid="tweetTextarea_0"]');
+  if (tweetInput) {
+    const inputValue = tweetInput.innerText;
+    captureInput(inputValue);
+  }
+}
+
+
+// Add an event listener to capture Twitter Whats Happening
+document.body.addEventListener('click', captureWhatsHappening);
+
+// Add an event listener to the tweet post button
+const postButton = document.querySelector('[data-testid="tweetButton"]');
+if (postButton) {
+  postButton.addEventListener('click', onTweetButtonClick);
+}
+
 
 // Function to style the user input with a red underline
 function styleUserInput(inputElement) {
@@ -62,34 +92,6 @@ function styleUserInput(inputElement) {
 function removeRedUnderline(inputElement) {
   inputElement.style.textDecoration = 'none';
 }
-
-
-// Capture Twitter Whats Happening
-document.body.addEventListener('click', function(event) {
-  const tweetButton = event.target.closest('[data-testid="tweetButtonInline"]');
-  if (tweetButton) {
-    const tweetInput = document.querySelector('[aria-label="Post text"]');
-    if (tweetInput) {
-      captureInput(tweetInput.innerText);
-      styleUserInput(tweetInput);
-    }
-  }
-});
-
-// Capture Twitter Post button and replies
-function captureAndStoreInput() {
-  const tweetInput = document.querySelector('[data-testid="tweetTextarea_0"]');
-  const postButton = document.querySelector('[data-testid="tweetButton"]');
-  
-  if (tweetInput && postButton) {
-    postButton.addEventListener('click', function() {
-      const inputValue = tweetInput.innerText;
-      captureInput(inputValue);
-    });
-  }
-}
-
-
 
 // Function to add an underline to the user input after a delay
 let typingTimer;
@@ -146,10 +148,8 @@ function updatePopupMessage(highestCategory) {
 
 // Function to send text to your Python API
 async function sendToPythonAPI(text) {
-  // Replace with the URL of your Python API endpoint.
+  
   const apiUrl = 'https://capstone-api-wzcr.onrender.com/analyze';
-
-  // Create a request to your Python API.
   const request = {
     method: 'POST',
     headers: {
@@ -215,7 +215,7 @@ async function addUnderlineToUserInput() {
         console.log(decision);
         hidePopup();
       }
-      captureInput(tweetInput.innerText);
+      
     } else {
       console.log('API NOT WORKING');
     }
@@ -277,12 +277,11 @@ removeRedUnderline(tweetInput);
     }
   }
 
-  
   // For example, you can hide the popup when the user presses Enter.
   if (event.key === "Enter") {
     clearPopup(); 
   }
 });
 
-// Call the Twitter Capture functions
-captureAndStoreInput();
+
+onTweetButtonClick();
