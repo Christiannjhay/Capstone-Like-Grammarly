@@ -19,7 +19,7 @@ function captureInput(inputValue) {
 }
 
 // Function to send input to Python for sentiment analysis
-function sendInputToPython(inputValue) {
+function sendInputToPython(inputValues) {
   const url = 'https://capstone-api-wzcr.onrender.com/analyze';
   const options = {
     method: 'POST',
@@ -202,7 +202,7 @@ async function addUnderlineToUserInput() {
         addUnderlineWithDelay(sent, decision);
       }
     }
-  }, 4000);
+  }, 3000);
 
   async function addUnderlineWithDelay(sent, decision) {
     if (sent === true) {
@@ -268,7 +268,7 @@ removeRedUnderline(tweetInput);
       
       addUnderlineToUserInput();
       console.log("it is working");
-    }, 3000);
+    }, 2000);
   
     removeRedUnderline(tweetInput);
     if (tweetInput && tweetInput.innerText.trim() === "") {
@@ -278,14 +278,11 @@ removeRedUnderline(tweetInput);
   }
 
   
-  
   // For example, you can hide the popup when the user presses Enter.
   if (event.key === "Enter") {
     clearPopup(); 
   }
 });
-
-
 
 // Call the Twitter Capture functions
 captureAndStoreInput();
