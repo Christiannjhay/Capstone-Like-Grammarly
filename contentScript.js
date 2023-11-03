@@ -22,7 +22,7 @@ function captureInput(inputValue) {
 
 // Function to send input to Python for sentiment analysis
 function sendInputToPython(inputValue) {
-  const url = 'https://capstone-api-wzcr.onrender.com/analyze';
+  const url = 'https://capstone-api-wzcr.onrender.com/log';
   const options = {
     method: 'POST',
     mode: 'cors', 
@@ -253,8 +253,6 @@ document.body.addEventListener('input', function (event) {
 
 // Add an event listener to the tweet input element to listen for keydown events
 document.body.addEventListener('keydown', function (event) {
-
-
 clearPopup();
 
 const tweetInput = document.querySelector('[aria-label="Post text"]');
