@@ -56,7 +56,7 @@ function captureWhatsHappening() {
   if (tweetButton) {
     const inputValue = tweetInput.innerText;
     captureInput(inputValue);
-    styleUserInput(tweetInput);
+   // styleUserInput(tweetInput);
   }
 }
 
@@ -65,7 +65,7 @@ function onTweetButtonClick() {
   const tweetInput = document.querySelector('[data-testid="tweetTextarea_0"]');
   if (tweetInput) {
     const inputValue = tweetInput.innerText;
-    captureInput(inputValue);
+   
   }
 }
 
@@ -225,7 +225,6 @@ async function addUnderlineToUserInput() {
 
 // Function to clear the popup
 function clearPopup() {
-
   const tweetInput = document.querySelector('[aria-label="Post text"]');
 
   if (popup) {
