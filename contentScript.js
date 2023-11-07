@@ -56,7 +56,7 @@ function captureWhatsHappening() {
   if (tweetButton) {
     const inputValue = tweetInput.innerText;
     captureInput(inputValue);
-   // styleUserInput(tweetInput);
+   
   }
 }
 
