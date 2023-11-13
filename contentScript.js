@@ -99,6 +99,7 @@ let editing = false;
 let popup;
 let sent = false;
 
+
 // Function to show the popup with a specific message
 function showPopup(message) {
   // Create the popup element if it doesn't exist
@@ -109,19 +110,25 @@ function showPopup(message) {
     popup.style.display = "none";
     document.body.appendChild(popup);
 
-    // Add an "X" button to close the popup
-    const closeButton = document.createElement("button");
-    closeButton.innerText = "X";
-    closeButton.addEventListener("click", hidePopup);
-    popup.appendChild(closeButton);
+    // Add message container
+    const messageContainer = document.createElement("p");
+    messageContainer.className = "popupMessage";
+    popup.appendChild(messageContainer);
+
+    // Add dislike button
+    const dislikeButton = document.createElement("button");
+    dislikeButton.innerText = "👎 Dislike";
+    dislikeButton.addEventListener("click", () => handleFeedback("dislike"));
+    popup.appendChild(dislikeButton);
   }
 
   // Set the popup message
-  popup.innerText = message;
+  const messageContainer = popup.querySelector(".popupMessage");
+  messageContainer.innerText = message;
 
   // Center the popup on the page
   popup.style.left = "40%";
-  popup.style.top = "22%";
+  popup.style.top = "17%";
   popup.style.transform = "translate(-50%, -50%)";
 
   // Display the popup element
@@ -131,6 +138,16 @@ function showPopup(message) {
   popup.style.border = "1px solid black";
   popup.style.backgroundColor = "gray";
   popup.style.padding = "10px";
+
+  // Add event listener to hide the popup when the mouse wheel is used
+  window.addEventListener('wheel', hidePopup);
+}
+
+// Function to handle user feedback
+function handleFeedback(feedbackType) {
+  // You can implement logic here to handle the user's feedback
+  // For example, send the feedback to the server or update a counter.
+  console.log("User feedback:", feedbackType);
 }
 
 // Function to hide the popup
@@ -138,6 +155,9 @@ function hidePopup() {
   if (popup) {
     popup.style.display = "none";
   }
+  
+  // Remove the event listener when the popup is hidden to prevent unnecessary calls to hidePopup
+  window.removeEventListener('wheel', hidePopup);
 }
 
 // Function to update the popup message based on the toxicity score
@@ -145,6 +165,7 @@ function updatePopupMessage(highestCategory) {
   let message = "Your text contains " + highestCategory;
   showPopup(message);
 }
+
 
 // Function to send text to your Python API
 async function sendToPythonAPI(text) {
