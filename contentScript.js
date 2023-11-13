@@ -98,6 +98,7 @@ let popup;
 let sent = false;
 
 
+
 // Function to show the popup with a specific message
 function showPopup(message) {
   // Create the popup element if it doesn't exist
@@ -113,33 +114,58 @@ function showPopup(message) {
     messageContainer.className = "popupMessage";
     popup.appendChild(messageContainer);
 
+    // Add report phrase
+    const reportPhrase = document.createElement("p");
+    reportPhrase.innerText = "Inaccurate? Report them";
+    reportPhrase.style.fontSize = "0.8em"; // Smaller size
+    reportPhrase.style.color = "#888"; // Lighter color
+    reportPhrase.style.marginBottom = "10px"; // Margin at the bottom
+    popup.appendChild(reportPhrase);
+
     // Add dislike button
     const dislikeButton = document.createElement("button");
-    dislikeButton.innerText = "👎 Dislike";
+    dislikeButton.innerText = "⚠️ Report";
+    dislikeButton.style.backgroundColor = "#f44336"; // Red color
+    dislikeButton.style.color = "white"; // White text color
+    dislikeButton.style.borderRadius = "5px"; // Rounded edges
+    dislikeButton.style.padding = "5px 10px"; // Smaller padding
+    dislikeButton.style.border = "none"; // No border
+    dislikeButton.style.cursor = "pointer"; // Cursor pointer on hover
+    dislikeButton.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#d32f2f"; // Darker red on hover
+    });
+    dislikeButton.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "#f44336"; // Back to original color on mouseout
+    });
     dislikeButton.addEventListener("click", () => handleFeedback("dislike"));
     popup.appendChild(dislikeButton);
-
-  
   }
 
   // Set the popup message
   const messageContainer = popup.querySelector(".popupMessage");
   messageContainer.innerText = message;
+  messageContainer.style.color = "black"; // Black text color
 
   // Center the popup on the page
-  popup.style.left = "40%";
-  popup.style.top = "17%";
+  popup.style.left = "50%";
+  popup.style.top = "50%";
   popup.style.transform = "translate(-50%, -50%)";
 
   // Display the popup element
   popup.style.display = "block";
 
   // Style the popup element as an inline card
-  popup.style.border = "1px solid black";
-  popup.style.backgroundColor = "gray";
-  popup.style.padding = "10px";
+  popup.style.border = "1px solid #ccc";
+  popup.style.backgroundColor = "#fff"; // White background
+  popup.style.padding = "20px";
+  popup.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.1)"; // Shadow effect
+
+  // New styles for rounded edges, larger and bolder text, and sans-serif font
+  popup.style.borderRadius = "15px"; // More rounded edges
+  messageContainer.style.fontSize = "1.2em"; // Smaller text
+  messageContainer.style.fontWeight = "bold"; // Bolder text
+  messageContainer.style.fontFamily = "sans-serif"; // Sans-serif font
 }
-    
 
 
 
