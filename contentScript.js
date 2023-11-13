@@ -1,6 +1,4 @@
 
-
-
 // Function to capture and store an input / Skip empty inputs / Send captured input to the API
 function captureInput(inputValue) {
   if (!inputValue.trim()) {
@@ -120,6 +118,12 @@ function showPopup(message) {
     dislikeButton.innerText = "👎 Dislike";
     dislikeButton.addEventListener("click", () => handleFeedback("dislike"));
     popup.appendChild(dislikeButton);
+
+    // Add delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "🗑️ Delete";
+    deleteButton.addEventListener("click", () => handleDelete());
+    popup.appendChild(deleteButton);
   }
 
   // Set the popup message
@@ -138,15 +142,10 @@ function showPopup(message) {
   popup.style.border = "1px solid black";
   popup.style.backgroundColor = "gray";
   popup.style.padding = "10px";
+}
+    
 
-  // Add event listener to hide the popup when the mouse wheel is used
-  window.addEventListener('wheel', hidePopup);
 
-  // Add delete button
-const deleteButton = document.createElement("button");
-deleteButton.innerText = "🗑️ Delete";
-deleteButton.addEventListener("click", () => handleDelete());
-popup.appendChild(deleteButton);
 
 // Function to handle delete
 function handleDelete() {
@@ -158,7 +157,7 @@ function handleDelete() {
     clearTimeout(typingTimer); // Reset the typing timer
   }
 }
-}
+
 
 // Function to handle user feedback
 function handleFeedback() {
