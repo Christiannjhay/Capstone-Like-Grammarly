@@ -141,14 +141,62 @@ function showPopup(message) {
 
   // Add event listener to hide the popup when the mouse wheel is used
   window.addEventListener('wheel', hidePopup);
+
+  // Add delete button
+const deleteButton = document.createElement("button");
+deleteButton.innerText = "🗑️ Delete";
+deleteButton.addEventListener("click", () => handleDelete());
+popup.appendChild(deleteButton);
+
+// Function to handle delete
+function handleDelete() {
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+  if (tweetInput) {
+    tweetInput.innerText = ''; // Clear the input field
+    clearPopup(); // Hide the popup
+    removeRedUnderline(tweetInput); // Remove underline
+    clearTimeout(typingTimer); // Reset the typing timer
+  }
+}
 }
 
 // Function to handle user feedback
-function handleFeedback(feedbackType) {
-  // You can implement logic here to handle the user's feedback
-  // For example, send the feedback to the server or update a counter.
-  console.log("User feedback:", feedbackType);
+function handleFeedback() {
+  // Capture the input value
+  const inputValue = document.querySelector('[aria-label="Post text"]').innerText;
+
+  // If the input is empty, don't send it
+  if (!inputValue.trim()) {
+    return;
+  }
+
+  // Send the captured input to the Python server
+  const url = 'https://capstone-api-wzcr.onrender.com/report';
+  const options = {
+    method: 'POST',
+    mode: 'cors', 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text: inputValue }),
+  };
+
+  fetch(url, options)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Server response:', data);
+    })
+    .catch(error => {
+      console.error('Fetch Error:', error);
+    });
 }
+
+
 
 // Function to hide the popup
 function hidePopup() {
@@ -300,6 +348,5 @@ removeRedUnderline(tweetInput);
     clearPopup(); 
   }
 });
-
 
 onTweetButtonClick();
