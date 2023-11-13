@@ -119,11 +119,7 @@ function showPopup(message) {
     dislikeButton.addEventListener("click", () => handleFeedback("dislike"));
     popup.appendChild(dislikeButton);
 
-    // Add delete button
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "🗑️ Delete";
-    deleteButton.addEventListener("click", () => handleDelete());
-    popup.appendChild(deleteButton);
+  
   }
 
   // Set the popup message
@@ -147,16 +143,7 @@ function showPopup(message) {
 
 
 
-// Function to handle delete
-function handleDelete() {
-  const tweetInput = document.querySelector('[aria-label="Post text"]');
-  if (tweetInput) {
-    tweetInput.innerText = ''; // Clear the input field
-    clearPopup(); // Hide the popup
-    removeRedUnderline(tweetInput); // Remove underline
-    clearTimeout(typingTimer); // Reset the typing timer
-  }
-}
+
 
 
 // Function to handle user feedback
@@ -195,14 +182,11 @@ function handleFeedback() {
     });
 }
 
-
-
 // Function to hide the popup
 function hidePopup() {
   if (popup) {
     popup.style.display = "none";
   }
-  
   // Remove the event listener when the popup is hidden to prevent unnecessary calls to hidePopup
   window.removeEventListener('wheel', hidePopup);
 }
