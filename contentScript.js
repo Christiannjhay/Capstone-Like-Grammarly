@@ -225,6 +225,12 @@ function handleFeedback() {
     .catch(error => {
       console.error('Fetch Error:', error);
     });
+
+    // After handling feedback, show a popup that says "Report sent"
+  showPopup("Report sent");
+
+  // You may want to hide the popup after a delay
+  setTimeout(hidePopup, 2000); // Hide the popup after 2 seconds
 }
 
 // Function to hide the popup
