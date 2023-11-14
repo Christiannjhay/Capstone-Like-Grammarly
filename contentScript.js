@@ -279,6 +279,43 @@ async function sendToPythonAPI(text) {
   }
 }
 
+let isProcessing = false;
+
+async function addUnderlineToPaste(event) {
+  event.stopPropagation();
+  
+  const tweetInput = document.querySelector('[aria-label="Post text"]');
+  if (tweetInput && !isProcessing) {
+    isProcessing = true;
+    sent = true;
+
+    setTimeout(async () => {
+      const decision = await sendToPythonAPI(tweetInput.innerText);
+      addUnderlineWithDelay(sent, decision);
+      isProcessing = false;
+    }, 3000);
+  }
+  
+  async function addUnderlineWithDelay(sent, decision) {
+    if (sent === true) {
+      if (decision >= 0.5) {
+        styleUserInput(tweetInput);
+        console.log('TOXIC');
+        console.log(decision);
+      } else {
+        console.log('NOT TOXIC');
+        console.log(decision);
+        hidePopup();
+      }
+      
+    } else {
+      console.log('API NOT WORKING');
+    }
+  }
+}
+
+document.body.addEventListener('paste', addUnderlineToPaste, true);
+
 // Function to add an underline to the user input after a delay
 async function addUnderlineToUserInput() {
   const tweetInput = document.querySelector('[aria-label="Post text"]');
@@ -364,7 +401,7 @@ removeRedUnderline(tweetInput);
     typingTimer = setTimeout(function() {
       
       addUnderlineToUserInput();
-      console.log("it is working");
+     
     }, 2000);
   
     removeRedUnderline(tweetInput);
