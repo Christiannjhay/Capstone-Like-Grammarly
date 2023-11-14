@@ -109,6 +109,27 @@ function showPopup(message) {
     popup.style.display = "none";
     document.body.appendChild(popup);
 
+    // Add close button
+    const closeButton = document.createElement("button");
+    closeButton.innerText = "X";
+    closeButton.style.position = "absolute"; // Position it absolutely within the popup
+    closeButton.style.right = "10px"; // 10px from the right edge
+    closeButton.style.top = "10px"; // 10px from the top edge
+    closeButton.style.borderRadius = "50%"; // Round button
+    closeButton.style.border = "none"; // No border
+    closeButton.style.backgroundColor = "#ccc"; // Gray background
+    closeButton.style.width = "20px"; // Fixed width
+    closeButton.style.height = "20px"; // Fixed height
+    closeButton.style.cursor = "pointer"; // Cursor pointer on hover
+    closeButton.addEventListener("mouseover", function() {
+      this.style.backgroundColor = "#999"; // Darker gray on hover
+    });
+    closeButton.addEventListener("mouseout", function() {
+      this.style.backgroundColor = "#ccc"; // Back to original color on mouseout
+    });
+    closeButton.addEventListener("click", hidePopup); // Handle click event
+    popup.appendChild(closeButton);
+
     // Add message container
     const messageContainer = document.createElement("p");
     messageContainer.className = "popupMessage";
@@ -147,8 +168,8 @@ function showPopup(message) {
   messageContainer.style.color = "black"; // Black text color
 
   // Center the popup on the page
-  popup.style.left = "50%";
-  popup.style.top = "50%";
+  popup.style.left = "40%";
+  popup.style.top = "25%";
   popup.style.transform = "translate(-50%, -50%)";
 
   // Display the popup element
@@ -166,8 +187,6 @@ function showPopup(message) {
   messageContainer.style.fontWeight = "bold"; // Bolder text
   messageContainer.style.fontFamily = "sans-serif"; // Sans-serif font
 }
-
-
 
 
 
@@ -213,8 +232,11 @@ function hidePopup() {
   if (popup) {
     popup.style.display = "none";
   }
-  // Remove the event listener when the popup is hidden to prevent unnecessary calls to hidePopup
-  window.removeEventListener('wheel', hidePopup);
+  
+  window.addEventListener('wheel', hidePopupOnScroll);  
+}
+function hidePopupOnScroll() {
+  hidePopup();  
 }
 
 // Function to update the popup message based on the toxicity score
