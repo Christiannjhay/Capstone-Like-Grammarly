@@ -20,7 +20,7 @@ function captureInput(inputValue) {
 
 // Function to send input to Python for sentiment analysis
 function sendInputToPython(inputValue) {
-  const url = 'https://capstone-api-wzcr.onrender.com/log';
+  const url = 'https://pinaka-final.onrender.com/log';
   const options = {
     method: 'POST',
     mode: 'cors', 
@@ -202,7 +202,7 @@ function handleFeedback() {
   }
 
   // Send the captured input to the Python server
-  const url = 'https://capstone-api-wzcr.onrender.com/report';
+  const url = 'https://pinaka-final.onrender.com/report';
   const options = {
     method: 'POST',
     mode: 'cors', 
@@ -255,7 +255,7 @@ function updatePopupMessage(highestCategory) {
 // Function to send text to your Python API
 async function sendToPythonAPI(text) {
   
-  const apiUrl = 'https://capstone-api-wzcr.onrender.com/analyze';
+  const apiUrl = 'https://pinaka-final.onrender.com/analyze';
   const request = {
     method: 'POST',
     headers: {
@@ -268,13 +268,26 @@ async function sendToPythonAPI(text) {
     const response = await fetch(apiUrl, request);
     const data = await response.json();
     
-    // Extract the highest category and underline decision from the response.
+    
     const highestCategory = data.highest_category;
-    const decision = data.underline_decision;
+    let decision = data.underline_decision;
+    const doubleNegation = data.double_negation_result;
+    const medicalTerms = data.medical_term;
 
+    console.log(doubleNegation);
+    
+    if(medicalTerms){
+      decision = 0.0
+    }else if (doubleNegation) {
+      decision = 0.0;
+    }
+
+    console.log(decision);
+    
     if (highestCategory !== undefined) {
       updatePopupMessage(highestCategory);
       return decision; // Return the decision value
+
     } else {
       console.error('Error: Toxicity score not found in API response');
       return undefined;
@@ -283,6 +296,7 @@ async function sendToPythonAPI(text) {
     console.error('Error sending data to your Python API:', error);
     return undefined;
   }
+  
 }
 
 let isProcessing = false;
