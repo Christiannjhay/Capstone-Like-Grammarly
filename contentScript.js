@@ -20,7 +20,7 @@ function captureInput(inputValue) {
 
 // ADD THE TWEET TO THE DATABASE
 function sendInputToPython(inputValue) {
-  const url = 'https://pinaka-final.onrender.com/log';
+  const url = 'https://capstone-api-pmuj.onrender.com/log';
   const options = {
     method: 'POST',
     mode: 'cors', 
@@ -202,7 +202,7 @@ function handleFeedback() {
   }
 
   // SEND REPORTS
-  const url = 'https://pinaka-final.onrender.com/report';
+  const url = 'https://capstone-api-pmuj.onrender.com/report';
   const options = {
     method: 'POST',
     mode: 'cors', 
@@ -255,7 +255,7 @@ function updatePopupMessage(highestCategory) {
 // DETECT DRAFTS
 async function sendToPythonAPI(text) {
   
-  const apiUrl = 'https://pinaka-final.onrender.com/analyze';
+  const apiUrl = 'https://capstone-api-pmuj.onrender.com/analyze';
   const request = {
     method: 'POST',
     headers: {
