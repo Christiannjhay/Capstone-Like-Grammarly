@@ -191,7 +191,7 @@ function showPopup(message) {
 
 
 
-// Function to handle user feedback
+// USER REPORTS
 function handleFeedback() {
   // Capture the input value
   const inputValue = document.querySelector('[aria-label="Post text"]').innerText;
@@ -267,11 +267,23 @@ async function sendToPythonAPI(text) {
   try {
     const response = await fetch(apiUrl, request);
     const data = await response.json();
-    
-    
     const highestCategory = data.highest_category;
-    const decision = data.underline_decision;
-    
+    let decision = data.underline_decision;
+    const medical_term = data.medical_term;
+    const double_negation_result = data.double_negation_result;
+
+    if(double_negation_result){
+      decision = 0.0
+    }
+
+    if(medical_term){
+      decision = 0.0
+    }
+
+    console.log('final tox score = '+ decision);
+    console.log('medical term = '+medical_term);
+    console.log('double negation = '+double_negation_result);
+
     if (highestCategory !== undefined) {
       updatePopupMessage(highestCategory);
       return decision; // Return the decision value
