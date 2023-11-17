@@ -270,20 +270,8 @@ async function sendToPythonAPI(text) {
     
     
     const highestCategory = data.highest_category;
-    let decision = data.underline_decision;
-    const doubleNegation = data.double_negation_result;
-    const medicalTerms = data.medical_term;
-
-    console.log(doubleNegation);
+    const decision = data.underline_decision;
     
-    if(medicalTerms){
-      decision = 0.0
-    }else if (doubleNegation) {
-      decision = 0.0;
-    }
-
-    console.log(decision);
-
     if (highestCategory !== undefined) {
       updatePopupMessage(highestCategory);
       return decision; // Return the decision value
@@ -363,7 +351,7 @@ async function addUnderlineToUserInput() {
 
   async function addUnderlineWithDelay(sent, decision) {
     if (sent === true) {
-      if (decision >= 0.52) {
+      if (decision >= 0.53) {
         styleUserInput(tweetInput);
         console.log('TOXIC');
         console.log(decision);
