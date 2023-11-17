@@ -18,7 +18,7 @@ function captureInput(inputValue) {
   });
 }
 
-// Function to send input to Python for sentiment analysis
+// ADD THE TWEET TO THE DATABASE
 function sendInputToPython(inputValue) {
   const url = 'https://pinaka-final.onrender.com/log';
   const options = {
@@ -201,7 +201,7 @@ function handleFeedback() {
     return;
   }
 
-  // Send the captured input to the Python server
+  // SEND REPORTS
   const url = 'https://pinaka-final.onrender.com/report';
   const options = {
     method: 'POST',
@@ -252,7 +252,7 @@ function updatePopupMessage(highestCategory) {
 }
 
 
-// Function to send text to your Python API
+// DETECT DRAFTS
 async function sendToPythonAPI(text) {
   
   const apiUrl = 'https://pinaka-final.onrender.com/analyze';
@@ -283,7 +283,7 @@ async function sendToPythonAPI(text) {
     }
 
     console.log(decision);
-    
+
     if (highestCategory !== undefined) {
       updatePopupMessage(highestCategory);
       return decision; // Return the decision value
@@ -318,7 +318,7 @@ async function addUnderlineToPaste(event) {
   
   async function addUnderlineWithDelay(sent, decision) {
     if (sent === true) {
-      if (decision >= 0.5) {
+      if (decision >= 0.52) {
         styleUserInput(tweetInput);
         console.log('TOXIC');
         console.log(decision);
@@ -363,7 +363,7 @@ async function addUnderlineToUserInput() {
 
   async function addUnderlineWithDelay(sent, decision) {
     if (sent === true) {
-      if (decision >= 0.5) {
+      if (decision >= 0.52) {
         styleUserInput(tweetInput);
         console.log('TOXIC');
         console.log(decision);
